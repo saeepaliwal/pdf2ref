@@ -18,7 +18,4 @@ Example for a directory
     pdf2ref ~/myproject/papers ~/myproject/my_output_file.bib
 
 
-There are a few file exceptions this script can not handle:
-    - it will not annotate preprints
-    - it will not annotate un-readable images or scanned pdf files
-    - it will not annotate supplementary information from a paper
+There are a few file exceptions this script can not handle: (i) it will not annotate preprints, (ii) it will not annotate images or scanned pdf files and (iii) it will not annotate supplementary information from a paper
