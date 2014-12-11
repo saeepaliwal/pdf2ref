@@ -22,9 +22,10 @@ def get_citations(dir_or_file, outfile):
         print("ERROR: There are no pdf files in the specified directory.")
         sys.exit()
 
-    import pdb; pdb.set_trace()
     with open(outfile,'w+') as bibfile:
         for pdf_file in all_papers:
+
+            print "Fetching reference for " + pdf_file + "\n"
             doi_re = re.compile("10.(\d)+/([^(\s\>\"\<)])+")
             input = PdfFileReader(file(pdf_file, "rb"))
 
@@ -37,11 +38,14 @@ def get_citations(dir_or_file, outfile):
             basetext = m.group(0)
             doi = re.sub(',', '', basetext)
 
+            if print_reference(doi,bibfile):
+                continue
+
             try: 
                 title = input.getDocumentInfo()['/Title']
                 if print_reference(title,bibfile):
                     continue
-                elif title.find("doi")<0:
+                elif title.find("doi")<0 and title != '':
                     idx = doi.find(title.replace(" ",""))
                     doi = doi[0:idx]
             except:
@@ -50,14 +54,16 @@ def get_citations(dir_or_file, outfile):
             # Remove standard words
             standard_words = get_standard_words()
             for word in standard_words:
-                if doi.find(word) >= 0:
-                    doi = doi[0:doi.find(word)]
+                if doi.lower().find(word) >= 0:
+                    doi = doi[0:doi.lower().find(word)]
 
+            # This is the meat
             if print_reference(doi,bibfile):
                 continue
-            elif len(doi) < 50:
-                while not print_reference(doi, bibfile):
+            elif len(doi) < 100:
+                while print_reference(doi, bibfile)==False and len(doi)>1:
                     doi = doi[:len(doi)-1]
+                    print doi
             else:
                 import pdb; pdb.set_trace()
                 undone_files.append(pdf_file)
@@ -79,23 +85,29 @@ def print_reference(DOI,f):
             return False
 
 def get_standard_words():
-    return ['Contents',
-            'January',
-            'Februrary', 
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-            'Copyright',
-            'Journal',
-            'University',
-            'Department' ]
+    return ['contents',
+            'january',
+            'februrary', 
+            'march',
+            'april',
+            'may',
+            'june',
+            'july',
+            'august',
+            'september',
+            'october',
+            'november',
+            'december',
+            'copyright',
+            'journal',
+            'university',
+            'department',
+            'review',
+            'journal',
+            'correspondence',
+            'introduction',
+            'elsevier',
+            'summary' ]
 
 if len(sys.argv) < 3: 
     print("ERROR: function requires two inputs: pdf2ref <DIR_OR_PAPER> <OUTPUTFILE>")
