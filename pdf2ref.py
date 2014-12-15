@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import urllib2
 from PyPDF2 import PdfFileReader
 import re
@@ -109,6 +108,10 @@ def get_standard_words():
             'introduction',
             'elsevier',
             'summary' ]
+
+if sys.argv[1] == "--help":
+    print "Syntax: pdf2ref <FILENAME_OF_PAPER> <OUTPUTFILE>"
+    sys.exit()
 
 if len(sys.argv) < 3: 
     print("ERROR: function requires two inputs: pdf2ref <DIR_OR_PAPER> <OUTPUTFILE>")
