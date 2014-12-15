@@ -12,8 +12,10 @@ def get_citations(dir_or_file, outfile):
     if os.path.isdir(dir_or_file):
         os.chdir(dir_or_file)
         all_papers = glob.glob("*.pdf")
+        print "\n Creating bibtex file " + outfile + " for directory " + dir_or_file + "\n"
     elif os.path.isfile(dir_or_file):
         all_papers.append(dir_or_file)
+        print "\n Creating bibtex file " + outfile + " for file " + dir_or_file + "\n"
     else:
         print("ERROR: Please input a pdf file or directory.")
         sys.exit()
@@ -22,10 +24,11 @@ def get_citations(dir_or_file, outfile):
         print("ERROR: There are no pdf files in the specified directory.")
         sys.exit()
 
+
     with open(outfile,'w+') as bibfile:
         for pdf_file in all_papers:
 
-            print "Fetching reference for " + pdf_file + "\n"
+            print "Fetching reference for " + pdf_file 
             doi_re = re.compile("10.(\d)+/([^(\s\>\"\<)])+")
             input = PdfFileReader(file(pdf_file, "rb"))
 
@@ -63,14 +66,12 @@ def get_citations(dir_or_file, outfile):
             elif len(doi) < 100:
                 while print_reference(doi, bibfile)==False and len(doi)>1:
                     doi = doi[:len(doi)-1]
-                    print doi
             else:
-                import pdb; pdb.set_trace()
                 undone_files.append(pdf_file)
-    
+
+    print "\nDid not find references for:"
     for undone_file in undone_files:
-        print ""
-    return undone_files
+        print undone_file
 
 def print_reference(DOI,f):
     if DOI is not None:
