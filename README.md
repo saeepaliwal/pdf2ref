@@ -7,7 +7,7 @@ Run this script to print a bibtex citation from a pdf to a file or a full bibtex
 
 Syntax:
 
-    pdf2ref <FILENAME_OF_PAPER.pdf> <OUTPUTFILE>
+    pdf2ref <FILENAME_OF_PAPER> <OUTPUTFILE>
 
 Example for single paper:
 
